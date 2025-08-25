@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CartProvider with ChangeNotifier {
   Cart? _cart;
-  Cart? get cart => cart;
+  Cart? get cart => _cart;
 
   int get itemCount => _cart?.items.length ?? 0;
 
@@ -19,7 +19,6 @@ class CartProvider with ChangeNotifier {
         "customizations": ["Extra cheese", "No pickles"],
         "subtotal": 16.48,
       },
-      // Add other mock items
     ],
     "summary": {
       "itemCount": 4,
@@ -34,13 +33,11 @@ class CartProvider with ChangeNotifier {
 
   Future<void> fetchCart() async {
     try {
-      // Simulate network delay
       await Future.delayed(const Duration(seconds: 1));
-
-      // Convert mock data to Cart object
       _cart = Cart.fromJson(_mockCart);
     } catch (e) {
       print(e);
+
       _cart = null;
     } finally {
       notifyListeners();
