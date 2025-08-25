@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         'cart': (context) => CartPage(),
         'order-sumary': (context) => OrderSummary(),
         // I do not know if I might need those but we'll see
-        //   '/payment-methods': (context) => PaymentMethodsScreen(),
+        // '/payment-methods': (context) => PaymentMethodsScreen(),
         // '/order-confirm': (context) => OrderConfirmationScreen(),
         // '/profile': (context) => ProfileScreen(),
         // '/support': (context) => SupportScreen(),
