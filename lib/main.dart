@@ -1,3 +1,4 @@
+import 'package:dofood/api/dependency_locator.dart';
 import 'package:dofood/pages/cart_page.dart';
 import 'package:dofood/pages/home_screen.dart';
 import 'package:dofood/pages/product_details.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  setupDependencies();
   runApp(const MyApp());
 }
 
