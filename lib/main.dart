@@ -1,4 +1,8 @@
+import 'package:dofood/pages/cart_page.dart';
 import 'package:dofood/pages/home_screen.dart';
+import 'package:dofood/pages/product_details.dart';
+import 'package:dofood/pages/products_page.dart';
+import 'package:dofood/pages/order_summay_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
