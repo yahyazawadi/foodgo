@@ -17,17 +17,17 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.shopping_bag),
             title: Text("Products"),
-            onTap: () => _navigateTo(context, '/products'),
+            onTap: () => _navigateTo(context, 'products'),
           ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
             title: Text("Cart"),
-            onTap: () => _navigateTo(context, '/cart'),
+            onTap: () => _navigateTo(context, 'cart'),
           ),
           ListTile(
             leading: Icon(Icons.note),
             title: Text("order summary"),
-            onTap: () => _navigateTo(context, '/order-sumary'),
+            onTap: () => _navigateTo(context, 'order-sumary'),
           ),
         ],
       ),
@@ -35,14 +35,7 @@ class MyDrawer extends StatelessWidget {
   }
 
   void _navigateTo(BuildContext context, String routeName) {
-    Navigator.pop(context);
-
-    if (ModalRoute.of(context)?.settings.name != routeName) {
-      if (routeName == '/') {
-        Navigator.pushReplacementNamed(context, routeName);
-      } else {
-        Navigator.pushNamed(context, routeName);
-      }
-    }
+    Navigator.pop(context); //so to close the drawer
+    Navigator.pushNamed(context, routeName);
   }
 }
