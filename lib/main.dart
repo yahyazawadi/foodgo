@@ -1,4 +1,5 @@
 import 'package:dofood/api/dependency_locator.dart';
+import 'package:dofood/pages/LoadingScreen.dart';
 import 'package:dofood/pages/cart_page.dart';
 import 'package:dofood/pages/home_screen.dart';
 import 'package:dofood/pages/product_details.dart';
@@ -26,15 +27,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => OrderProvider()),
       ],
-
       child: MaterialApp(
         title: "foodGo",
         theme: ThemeData(
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        home: LoadingScreen(),
         routes: {
-          '/': (context) => HomeScreen(),
+          '/home': (context) => HomeScreen(),
           'products': (context) => ProductsPage(),
           'product-details': (context) => ProductDetails(),
           'cart': (context) => CartPage(),
