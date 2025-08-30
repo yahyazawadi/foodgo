@@ -17,4 +17,9 @@ class ProductApi {
     final response = await _apiClient.get('/api/products/$id');
     return Product.fromJson(response.data);
   }
+
+  Future<Map<String, dynamic>> confirmOrder(Map<String, dynamic> body) async {
+    final response = await _apiClient.post('/api/order/confirm', data: body);
+    return Map<String, dynamic>.from(response.data ?? {});
+  }
 }

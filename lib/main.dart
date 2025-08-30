@@ -1,8 +1,8 @@
 import 'package:dofood/api/dependency_locator.dart';
 import 'package:dofood/pages/cart_page.dart';
 import 'package:dofood/pages/home_screen.dart';
-import 'package:dofood/pages/product_details.dart';
-import 'package:dofood/pages/products_page.dart';
+import 'package:dofood/pages/products_page/product_details.dart';
+import 'package:dofood/pages/products_page/products_page.dart';
 import 'package:dofood/pages/order_summay_page.dart';
 import 'package:dofood/providers/cart_provider.dart';
 import 'package:dofood/providers/order_provider.dart';
@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => HomeScreen(),
-          'products': (context) => ProductsPage(),
-          'product-details': (context) => ProductDetails(),
+          'products': (context) => ProductPage(),
+          //'product-details': (context) => ProductDetails(),
           'cart': (context) => CartPage(),
           'order-sumary': (context) => OrderSummary(),
           // I do not know if I might need those but we'll see
