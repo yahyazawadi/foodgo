@@ -2,12 +2,17 @@ import 'package:dofood/pages/products_page/product_details.dart';
 import 'package:dofood/pages/products_page/widgets/bottom_bar.dart';
 import 'package:dofood/pages/products_page/widgets/header.dart';
 import 'package:dofood/pages/products_page/widgets/search_row.dart';
+import 'package:dofood/pages/products_page/widgets/category_chips.dart';
+import 'package:dofood/pages/products_page/widgets/product_grid.dart';
+import 'package:dofood/pages/products_page/widgets/empty_state.dart';
+import 'package:dofood/pages/products_page/widgets/add_product_fab.dart';
+import 'package:dofood/pages/products_page/filters/product_filters.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:dofood/models/product_model.dart';
 import 'package:dofood/providers/product_provider.dart';
+import 'package:dofood/pages/products_page/filters/debouncer.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -18,71 +23,62 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final TextEditingController _searchController = TextEditingController();
+  final Debouncer _debouncer = Debouncer(milliseconds: 180);
+
   String _selectedCategory = 'All';
   final Set<int> _favourites = {};
   List<Product> _filtered = [];
   late ProductProvider _provider;
 
-  List<String> _categories = ['All']; // dynamically built later
+  List<String> _categories = const ['All'];
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(_onSearchChanged);
-    // fetch products after first frame so Provider.of works
 
     _provider = Provider.of<ProductProvider>(context, listen: false);
+
+    _searchController.addListener(() {
+      _debouncer.run(_applyFilters);
+    });
+
     _loadProducts();
-    // listen for changes from provider (so UI updates when provider finishes)
     _provider.addListener(_onProviderChanged);
   }
 
   Future<void> _loadProducts() async {
     try {
-      await Provider.of<ProductProvider>(
-        context,
-        listen: false,
-      ).fetchProducts();
-      _buildCategories();
+      await _provider.fetchProducts();
+      _rebuildCategories();
       _applyFilters();
     } catch (_) {
+      // Even if fetch failed, try to reflect whatever data is currently there.
+      _rebuildCategories();
       _applyFilters();
     }
   }
 
-  void _buildCategories() {
-    final provider = Provider.of<ProductProvider>(context, listen: false);
-    final cats = provider.products.map((p) => p.category).toSet().toList();
-    cats.sort();
-    setState(() {
-      _categories = ['All', ...cats];
-    });
+  void _rebuildCategories() {
+    final built = buildCategories(_provider.products);
+    setState(() => _categories = built);
   }
 
   void _onProviderChanged() {
-    // when provider updates, re-apply filters
-    if (mounted) _applyFilters();
+    if (!mounted) return;
+    _rebuildCategories();
+    _applyFilters();
   }
 
-  void _onSearchChanged() => _applyFilters();
-
   void _applyFilters() {
-    final provider = Provider.of<ProductProvider>(context, listen: false);
-    final query = _searchController.text.trim().toLowerCase();
-
-    final products = provider.products.where((p) {
-      final matchesQuery =
-          query.isEmpty ||
-          p.name.toLowerCase().contains(query) ||
-          p.description.toLowerCase().contains(query);
-      final matchesCategory =
-          _selectedCategory == 'All' ||
-          p.category.toLowerCase() == _selectedCategory.toLowerCase();
-      return matchesQuery && matchesCategory;
-    }).toList();
-
+    final query = _searchController.text;
+    final filtered = filterProducts(
+      _provider.products,
+      query,
+      _selectedCategory,
+    );
+    if (!mounted) return;
     setState(() {
-      _filtered = products;
+      _filtered = filtered;
     });
   }
 
@@ -104,7 +100,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   void dispose() {
-    _searchController.removeListener(_onSearchChanged);
+    _searchController.removeListener(_applyFilters);
     _searchController.dispose();
     try {
       _provider.removeListener(_onProviderChanged);
@@ -112,167 +108,8 @@ class _ProductPageState extends State<ProductPage> {
     super.dispose();
   }
 
-  Widget _buildCategoryChips() {
-    return SizedBox(
-      height: 48,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: Axis.horizontal,
-        itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, i) {
-          final label = _categories[i];
-          final selected = label == _selectedCategory;
-          return ChoiceChip(
-            label: Text(label),
-            selected: selected,
-            onSelected: (val) {
-              setState(() => _selectedCategory = val ? label : 'All');
-              _applyFilters();
-            },
-            selectedColor: Colors.red.shade400,
-            backgroundColor: Colors.grey.shade200,
-            labelStyle: TextStyle(
-              color: selected ? Colors.white : Colors.black87,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildGrid() {
-    if (_filtered.isEmpty) {
-      return const Expanded(
-        child: Center(child: Text('No items match your search / filter.')),
-      );
-    }
-
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        child: GridView.builder(
-          itemCount: _filtered.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.68,
-          ),
-          itemBuilder: (context, index) {
-            final item = _filtered[index];
-            return GestureDetector(
-              onTap: () => _onTapProduct(item),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 2,
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                          child: AspectRatio(
-                            aspectRatio: 1.6,
-                            child: CachedNetworkImage(
-                              imageUrl: item.image,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey[200],
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: Colors.grey[200],
-                                child: const Center(
-                                  child: Icon(Icons.broken_image),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            item.name,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          child: Text(
-                            item.description,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                size: 16,
-                                color: Colors.orange,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(item.rating.toStringAsFixed(1)),
-                              const Spacer(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      right: 8,
-                      bottom: 8,
-                      child: GestureDetector(
-                        onTap: () => _toggleFavorite(item.id),
-                        child: CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            _favourites.contains(item.id)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: _favourites.contains(item.id)
-                                ? Colors.red
-                                : Colors.grey[600],
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // The provider changes are handled via listener set in initState.
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
@@ -281,17 +118,42 @@ class _ProductPageState extends State<ProductPage> {
             buildHeader(),
             buildSearchRow(_searchController, context),
             const SizedBox(height: 6),
-            _buildCategoryChips(),
-            _buildGrid(),
+            CategoryChips(
+              categories: _categories,
+              selectedCategory: _selectedCategory,
+              onChanged: (value) {
+                setState(() => _selectedCategory = value);
+                _applyFilters();
+              },
+            ),
+            if (_filtered.isEmpty)
+              const Expanded(
+                child: Center(
+                  child: EmptyState(
+                    message: 'No items match your search / filter.',
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
+                  child: ProductGrid(
+                    products: _filtered,
+                    isFavorite: (id) => _favourites.contains(id),
+                    onTap: _onTapProduct,
+                    onToggleFavorite: (id) => _toggleFavorite(id),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.red.shade400,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: AddProductFAB(onPressed: () {}),
       bottomNavigationBar: buildBottomBar(),
     );
   }

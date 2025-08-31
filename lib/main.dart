@@ -33,13 +33,12 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: LoadingScreen(),
+        home: ProductPage(),
         routes: {
-
           '/home': (context) => HomeScreen(),
           'products': (context) => ProductPage(),
-          //'product-details': (context) => ProductDetails(),
 
+          //'product-details': (context) => ProductDetails(),
           'cart': (context) => CartPage(),
           'order-sumary': (context) => OrderSummary(),
           // I do not know if I might need those but we'll see
