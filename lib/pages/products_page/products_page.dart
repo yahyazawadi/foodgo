@@ -9,7 +9,6 @@ import 'package:dofood/pages/products_page/widgets/add_product_fab.dart';
 import 'package:dofood/pages/products_page/filters/product_filters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:dofood/models/product_model.dart';
 import 'package:dofood/providers/product_provider.dart';
 import 'package:dofood/pages/products_page/filters/debouncer.dart';
@@ -52,7 +51,7 @@ class _ProductPageState extends State<ProductPage> {
       _rebuildCategories();
       _applyFilters();
     } catch (_) {
-      // Even if fetch failed, try to reflect whatever data is currently there.
+      // even when fetch failed, try to reflect whatever data is currently there.
       _rebuildCategories();
       _applyFilters();
     }
