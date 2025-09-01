@@ -1,4 +1,5 @@
 import 'package:dofood/api/dependency_locator.dart';
+import 'package:dofood/pages/products_page/product_details.dart';
 import 'package:dofood/pages/products_page/products_page.dart';
 import 'package:dofood/providers/cart_provider.dart';
 import 'package:dofood/providers/order_provider.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        //home: ProductDetails(productId: 0),
         home: ProductPage(),
         routes: {
           'products': (context) => ProductPage(),

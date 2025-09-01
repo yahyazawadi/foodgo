@@ -10,7 +10,7 @@ import 'widgets/detail_description.dart';
 import 'widgets/detail_quick_facts.dart';
 import 'widgets/detail_spicy_slider.dart';
 import 'widgets/detail_portion_selector.dart';
-import 'widgets/detail_price_action.dart';
+import 'widgets/details_price.dart';
 
 class ProductDetails extends StatefulWidget {
   final int productId;
@@ -21,7 +21,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  int _portion = 2;
+  int _portion = 1;
   double _spicy = 20;
 
   Product? product;
@@ -50,8 +50,6 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final bg = const Color(0xFFF7F7FA);
-    final accentRed = Colors.red.shade400;
-    final darkBrown = const Color(0xFF3B2F2F);
 
     final p =
         product ??
@@ -115,10 +113,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   const SizedBox(height: 24),
                   DetailPriceAction(
-                    price: p.price,
-                    isAvailable: p.available,
-                    accentRed: accentRed,
-                    darkBrown: darkBrown,
+                    product: p,
+                    portion: _portion,
+                    spicy: _spicy,
                   ),
                 ],
               ),

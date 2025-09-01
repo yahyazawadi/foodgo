@@ -128,9 +128,7 @@ class _ProductPageState extends State<ProductPage> {
             if (_filtered.isEmpty)
               const Expanded(
                 child: Center(
-                  child: EmptyState(
-                    message: 'No items match your search / filter.',
-                  ),
+                  child: EmptyState(message: 'No products match your search'),
                 ),
               )
             else

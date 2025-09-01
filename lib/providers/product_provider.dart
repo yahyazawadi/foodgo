@@ -18,4 +18,18 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> placeOrder(int productId, int portion, double spicy) async {
+    try {
+      final productApi = GetIt.instance<ProductApi>();
+      await productApi.confirmOrder({
+        "productId": productId,
+        "portion": portion,
+        "spicyLevel": spicy,
+      });
+      debugPrint("Order placed successfully!");
+    } catch (e) {
+      debugPrint("Error placing order: $e");
+    }
+  }
 }
