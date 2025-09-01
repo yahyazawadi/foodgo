@@ -27,6 +27,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -65,8 +66,9 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Text(
                     item.description,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
                 ),
                 const Spacer(),

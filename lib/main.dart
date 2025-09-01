@@ -1,10 +1,5 @@
 import 'package:dofood/api/dependency_locator.dart';
-import 'package:dofood/pages/LoadingScreen.dart';
-import 'package:dofood/pages/cart_page.dart';
-import 'package:dofood/pages/home_screen.dart';
-import 'package:dofood/pages/products_page/product_details.dart';
 import 'package:dofood/pages/products_page/products_page.dart';
-import 'package:dofood/pages/order_summay_page.dart';
 import 'package:dofood/providers/cart_provider.dart';
 import 'package:dofood/providers/order_provider.dart';
 import 'package:dofood/providers/product_provider.dart';
@@ -35,12 +30,12 @@ class MyApp extends StatelessWidget {
         ),
         home: ProductPage(),
         routes: {
-          '/home': (context) => HomeScreen(),
           'products': (context) => ProductPage(),
-
+          // due to changing and unclear requirments, none of these pages were implemented
+          // '/home': (context) => HomeScreen(),
+          // 'cart': (context) => CartPage(),
+          // 'order-sumary': (context) => OrderSummary(),
           //'product-details': (context) => ProductDetails(),
-          'cart': (context) => CartPage(),
-          'order-sumary': (context) => OrderSummary(),
           // I do not know if I might need those but we'll see
           // '/payment-methods': (context) => PaymentMethodsScreen(),
           // '/order-confirm': (context) => OrderConfirmationScreen(),

@@ -6,12 +6,12 @@ import 'package:dofood/pages/products_page/widgets/category_chips.dart';
 import 'package:dofood/pages/products_page/widgets/product_grid.dart';
 import 'package:dofood/pages/products_page/widgets/empty_state.dart';
 import 'package:dofood/pages/products_page/widgets/add_product_fab.dart';
-import 'package:dofood/pages/products_page/filters/product_filters.dart';
+import 'package:dofood/pages/products_page/search/product_filters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dofood/models/product_model.dart';
 import 'package:dofood/providers/product_provider.dart';
-import 'package:dofood/pages/products_page/filters/debouncer.dart';
+import 'package:dofood/pages/products_page/search/debouncer.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -51,7 +51,7 @@ class _ProductPageState extends State<ProductPage> {
       _rebuildCategories();
       _applyFilters();
     } catch (_) {
-      // even when fetch failed, try to reflect whatever data is currently there.
+      // when fetch failed, try data is currently present.
       _rebuildCategories();
       _applyFilters();
     }

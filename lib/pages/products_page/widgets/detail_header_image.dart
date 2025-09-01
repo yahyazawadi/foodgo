@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'circular_icon_button.dart';
-
 class DetailHeaderImage extends StatelessWidget {
   const DetailHeaderImage({super.key, required this.image});
   final String image;

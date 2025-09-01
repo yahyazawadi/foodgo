@@ -30,7 +30,7 @@ class DetailMetaSection extends StatelessWidget {
             const Icon(Icons.star, color: Colors.orange, size: 16),
             const SizedBox(width: 6),
             Text(
-              '${p.rating.toStringAsFixed(1)}',
+              p.rating.toStringAsFixed(1),
               style: GoogleFonts.poppins(fontSize: 13),
             ),
             const SizedBox(width: 8),

@@ -6,7 +6,7 @@ class CartProvider with ChangeNotifier {
   Cart? get cart => _cart;
 
   int get itemCount => _cart?.items.length ?? 0;
-
+  // here I added mock data instead of using the api as a plan to integrate the api later on
   final Map<String, dynamic> _mockCart = {
     "items": [
       {

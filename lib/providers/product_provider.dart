@@ -12,7 +12,7 @@ class ProductProvider with ChangeNotifier {
       final productApi = GetIt.instance<ProductApi>();
       _products = await productApi.getProducts();
     } catch (e) {
-      print('Error fetching products: $e');
+      debugPrint('Error fetching products: $e');
       _products = [];
     } finally {
       notifyListeners();

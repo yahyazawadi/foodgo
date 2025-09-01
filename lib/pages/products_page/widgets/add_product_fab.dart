@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// this button would have led me to add product page
 class AddProductFAB extends StatelessWidget {
   const AddProductFAB({super.key, required this.onPressed});
 

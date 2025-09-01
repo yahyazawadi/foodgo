@@ -102,15 +102,21 @@ flutter_native_splash:
   android: true
   ios: false
   web: false
-  image: assets/splash_text.jpg 
-  color: "#f96b77"  
-  android_gravity: fill  
-  fullscreen: true  
+  color: "#f96b77"
+  android_gravity: center
+  fullscreen: true
   
-
+  # Text configuration for splash screen
+  text: GoFood
+  text_color: "#ffffff"
+  font_size: 48
+  
   android_12:
-    image: assets/splash_text.jpg 
-    icon_background_color: "#f96b77"  
-    android_gravity: fill
+    color: "#f96b77"
+    icon_background_color: "#f96b77"
+    android_gravity: center
     fullscreen: true
+    text: GoFood
+    text_color: "#ffffff"
+    font_size: 48
   
