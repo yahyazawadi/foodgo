@@ -63,7 +63,6 @@ class DetailPriceAction extends StatelessWidget {
                     try {
                       await prov.placeOrder(product.id, portion, spicy);
 
-                      // show confirmation snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Order placed successfully!'),
@@ -72,7 +71,6 @@ class DetailPriceAction extends StatelessWidget {
                         ),
                       );
                     } catch (e) {
-                      // show error snackbar if something went wrong
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Failed to place order: $e'),
