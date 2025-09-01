@@ -27,12 +27,12 @@ class ProductGrid extends StatelessWidget {
         childAspectRatio: 0.68,
       ),
       itemBuilder: (context, index) {
-        final item = products[index];
+        final p = products[index];
         return ProductCard(
-          item: item,
-          isFavorite: isFavorite(item.id),
-          onTap: () => onTap(item),
-          onToggleFavorite: () => onToggleFavorite(item.id),
+          p: p,
+          isFavorite: isFavorite(p.id),
+          onTap: () => onTap(p),
+          onToggleFavorite: () => onToggleFavorite(p.id),
         );
       },
     );

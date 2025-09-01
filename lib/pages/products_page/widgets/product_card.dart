@@ -5,13 +5,13 @@ import 'package:dofood/models/product_model.dart';
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
-    required this.item,
+    required this.p,
     required this.isFavorite,
     required this.onTap,
     required this.onToggleFavorite,
   });
 
-  final Product item;
+  final Product p;
   final bool isFavorite;
   final VoidCallback onTap;
   final VoidCallback onToggleFavorite;
@@ -37,7 +37,7 @@ class ProductCard extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 1.6,
                     child: CachedNetworkImage(
-                      imageUrl: item.image,
+                      imageUrl: p.image,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         color: Colors.grey[200],
@@ -54,7 +54,7 @@ class ProductCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    item.name,
+                    p.name,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -65,7 +65,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   child: Text(
-                    item.description,
+                    p.description,
                     style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
@@ -78,7 +78,7 @@ class ProductCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, size: 16, color: Colors.orange),
                       const SizedBox(width: 6),
-                      Text(item.rating.toStringAsFixed(1)),
+                      Text(p.rating.toStringAsFixed(1)),
                       const Spacer(),
                     ],
                   ),
